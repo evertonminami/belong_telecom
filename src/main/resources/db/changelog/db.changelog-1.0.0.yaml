@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-create-schema
+      author: eminami
+      changes:
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: java.sql.Types.BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: java.sql.Types.VARCHAR(20)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: phone_number
+            columns:
+              - column:
+                  name: id
+                  type: java.sql.Types.BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: customer_id
+                  type: java.sql.Types.BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_customer_phone_number
+                    references: customer(id)
+              - column:
+                  name: number
+                  type: java.sql.Types.VARCHAR(15)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: java.sql.Types.BOOLEAN
+                  constraints:
+                    nullable: false
+                  defaultValue: false
+  - changeSet:
+      id: init-insert-data
+      author: eminami
+      changes:
+        - loadData:
+            file: db/changelog/csv/customer.csv
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+        - loadData:
+            file: db/changelog/csv/phones.csv
+            tableName: phone_number
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: number
+                  type: STRING
